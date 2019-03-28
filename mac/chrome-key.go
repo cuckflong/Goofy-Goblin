@@ -18,10 +18,8 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 )
 
-const TMP_DATABASE = "./dumps/tmp_database"
-
 func main() {
-	//macPromptEveryPeriod(5)
+	//macPromptEveryPeriod(5, 10)
 	//macPromptOnStart()
 	//macExtractKeys()
 }
