@@ -15,8 +15,8 @@ type Agent struct {
 	Platform       string
 	Architecture   string
 	UserName       string
-	UserUid        string
-	UserGid        string
+	UserUID        string
+	UserGID        string
 	Pid            int
 	InitialCheckIn time.Time
 	LastCheckIn    time.Time
@@ -39,8 +39,8 @@ func New(debug bool, verbose bool) Agent {
 		}
 	} else {
 		a.UserName = u.Username
-		a.UserUid = u.Uid
-		a.UserGid = u.Gid
+		a.UserUID = u.Uid
+		a.UserGID = u.Gid
 	}
 	return a
 }

