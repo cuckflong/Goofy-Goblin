@@ -2,12 +2,10 @@
 
 package main
 
-import "github.com/johnathanclong/Goofy-Goblin/pkg/core"
-
-var functionList []core.Function
+import "github.com/johnathanclong/Goofy-Goblin/pkg/utils"
 
 func init() {
-
+	utils.Status("success", "Hello")
 }
 
 func main() {
