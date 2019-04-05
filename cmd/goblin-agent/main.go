@@ -2,7 +2,9 @@
 
 package main
 
-var functionList []Function
+import "github.com/johnathanclong/Goofy-Goblin/pkg/core"
+
+var functionList []core.Function
 
 func init() {
 

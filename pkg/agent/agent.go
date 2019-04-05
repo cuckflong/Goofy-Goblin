@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/johnathanclong/Goofy-Goblin/pkg/transport"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -27,7 +28,7 @@ type Agent struct {
 
 func New(debug bool, verbose bool) Agent {
 	a := Agent{}
-	a.ID, _ = uuid.NewV4()
+	a.ID = uuid.NewV4()
 	a.Platform = runtime.GOOS
 	a.Architecture = runtime.GOARCH
 	a.Debug = debug
@@ -35,7 +36,8 @@ func New(debug bool, verbose bool) Agent {
 	u, err := user.Current()
 	if err != nil {
 		if a.Debug {
-
+			transport.SendTCP()
+			common.status("error", "Fail getting current user")
 		}
 	} else {
 		a.UserName = u.Username
