@@ -3,9 +3,12 @@
 package agent
 
 import (
+	"fmt"
 	"os/user"
 	"runtime"
 	"time"
+
+	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
 
 	"github.com/johnathanclong/Goofy-Goblin/pkg/utils"
 	uuid "github.com/satori/go.uuid"
@@ -23,39 +26,50 @@ type Agent struct {
 	InitialCheckIn time.Time
 	LastCheckIn    time.Time
 	IPs            []string
-	Debug          bool
-	Verbose        bool
 }
 
 // New creates a new agent
-func New(debug bool, verbose bool) Agent {
+func New() Agent {
 	a := Agent{}
 	a.ID = uuid.NewV4()
 	a.Platform = runtime.GOOS
 	a.Architecture = runtime.GOARCH
-	a.Debug = debug
 
 	u, err := user.Current()
 	if err != nil {
-		if a.Debug {
-			utils.Status("error", "Failed getting current user")
+		if config.Debug {
+			utils.Status(utils.Error, "Failed getting current user")
 		}
 	} else {
 		a.UserName = u.Username
 		a.UserUID = u.Uid
 		a.UserGID = u.Gid
 	}
+	InitCheckIn(a)
+	utils.Status(utils.Info, fmt.Sprintf("Username: %s", a.UserName))
+	utils.Status(utils.Info, fmt.Sprintf("Platform: %s", a.Platform))
+	utils.Status(utils.Info, fmt.Sprintf("Architecture: %s", a.Architecture))
+	utils.Status(utils.Info, fmt.Sprintf("User UID: %s", a.UserUID))
+	utils.Status(utils.Info, fmt.Sprintf("User GID: %s", a.UserGID))
 	return a
 }
 
-// CheckIn tries to check in with the master server
-func CheckIn(a Agent) {
+// Heartbeat tries to check in with the master server
+func Heartbeat(a Agent) {
 	// Todo make sure there is a connection with the master server
-	a.LastCheckIn = time.Now()
+	var now = time.Now()
+	if config.Verbose {
+		utils.Status(utils.Verbose, fmt.Sprintf("Sending heartbeat at %s", now.String()))
+	}
+	a.LastCheckIn = now
 }
 
 // InitCheckIn do the initial checkin with the master server
 func InitCheckIn(a Agent) {
 	// Todo initial checkin with the master server
+	var now = time.Now()
+	if config.Verbose {
+		utils.Status(utils.Verbose, fmt.Sprintf("Initial checkin at %s", now.String()))
+	}
 	a.InitialCheckIn = time.Now()
 }

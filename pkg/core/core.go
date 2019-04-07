@@ -2,6 +2,10 @@
 
 package core
 
+import (
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent"
+)
+
 // FunctionList is an array of function loaded into the agent
 var FunctionList []Function
 
@@ -10,10 +14,10 @@ var EventChannel = make(chan Event, 500)
 
 // Constants
 const (
-	coreStartUp  = 1 // coreStartup Function to run on start up
-	corePeriod   = 2 // corePeriod Function to run on period
-	coreCall     = 3 // coreCall Function to run on call
-	coreInterupt = 4 // coreInterupt Function to run in signal interupt
+	CoreStartUp  = 1 // CoreStartup Function to run on start up
+	CorePeriod   = 2 // CorePeriod Function to run on period
+	CoreCall     = 3 // CoreCall Function to run on call
+	CoreInterupt = 4 // CoreInterupt Function to run in signal interupt
 )
 
 // Function contains all the information required for the core to work with
@@ -22,30 +26,30 @@ type Function struct {
 	Period int
 	Mode   int
 	Active bool
-	Func   func([]string)
+	Func   func(agent.Agent, []string)
 }
 
-// Event is the
+// Event contains the information require to perform an event
 type Event struct {
 	Code       string
 	Parameters []string
 }
 
 // Call will call the given function with the parameter array
-func Call(event Event) {
+func Call(a agent.Agent, event Event) {
 	for _, f := range FunctionList {
 		if f.Code == event.Code {
-			go f.Func(event.Parameters)
+			go f.Func(a, event.Parameters)
 			return
 		}
 	}
 }
 
 // EventLoop wait for events and call them one by oen
-func EventLoop() {
+func EventLoop(a agent.Agent) {
 	for {
 		e := <-EventChannel
-		Call(e)
+		Call(a, e)
 	}
 }
 

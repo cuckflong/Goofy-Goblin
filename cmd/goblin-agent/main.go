@@ -4,6 +4,9 @@ package main
 
 import (
 	"sync"
+	"time"
+
+	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
 
 	"github.com/johnathanclong/Goofy-Goblin/pkg/agent"
 	"github.com/johnathanclong/Goofy-Goblin/pkg/core"
@@ -11,9 +14,10 @@ import (
 )
 
 var mux sync.Mutex
+var a agent.Agent
 
 func init() {
-	utils.Status("success", "Initializing agent")
+	utils.Status(utils.Success, "Initializing agent")
 }
 
 func _init(f core.Function) {
@@ -23,11 +27,18 @@ func _init(f core.Function) {
 }
 
 func main() {
-	agent := agent.New()
-	go core.EventLoop()
-	var b []string
-	core.EventEmit("a", b)
-	for {
+	if config.Debug {
+		utils.Status(utils.Info, "Starting agent in debug mode")
+	}
+	if config.Verbose {
+		utils.Status(utils.Info, "Starting agent in verbose mode")
+	}
+	a = agent.New()
 
+	go core.EventLoop(a)
+
+	for {
+		agent.Heartbeat(a)
+		time.Sleep(60 * time.Second)
 	}
 }
