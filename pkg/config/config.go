@@ -14,8 +14,8 @@ var verboseString = "false"
 // Verbose mode
 var Verbose = false
 
-// SilentString mode
-var SilentString = "false"
+// silentString mode
+var silentString = "false"
 
 // Silent mode
 var Silent = false
@@ -27,7 +27,7 @@ func init() {
 	if verboseString == "true" {
 		Verbose = true
 	}
-	if SilentString == "true" {
+	if silentString == "true" {
 		Silent = true
 	}
 }

