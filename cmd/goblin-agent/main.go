@@ -43,8 +43,6 @@ func main() {
 
 	go core.EventLoop(a)
 
-	core.EventEmit("TEST_MODULE", []string{"lol"})
-
 	for {
 		agent.Heartbeat(a)
 		time.Sleep(60 * time.Second)
