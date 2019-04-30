@@ -30,8 +30,8 @@ func GenerateAgent(debug bool, verbose bool, silent bool, moduleList []string) e
 	var tags string
 
 	for _, module := range moduleList {
-		copyFile("modules/"+module, tempDir)
-		tag := getTag("modules/" + module)
+		copyCompileFile("modules/"+module+"/exploit.go", tempDir)
+		tag := getTag("modules/" + module + "/exploit.go")
 		if tag != "" {
 			if tags == "" {
 				tags += tag
@@ -41,7 +41,7 @@ func GenerateAgent(debug bool, verbose bool, silent bool, moduleList []string) e
 		}
 	}
 
-	copyFile("cmd/goblin-agent/main.go", tempDir)
+	copyCompileFile("cmd/goblin-agent/main.go", tempDir)
 
 	utils.Status(utils.Info, ldflags)
 	cmd := exec.Command("go", "build", "-o", "test", "-ldflags", ldflags, "-tags", tags)
@@ -71,9 +71,8 @@ func getTag(fileName string) string {
 	return ""
 }
 
-func copyFile(src string, dir string) error {
-	path := strings.Split(src, "/")
-	fileName := path[len(path)-1]
+func copyCompileFile(src string, dir string) error {
+	fileName, err := ioutil.TempFile(dir, "compile.*.go")
 
 	input, err := ioutil.ReadFile(src)
 
@@ -82,6 +81,6 @@ func copyFile(src string, dir string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(dir+"/"+fileName, input, 0644)
+	_, err = fileName.Write(input)
 	return err
 }
