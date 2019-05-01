@@ -5,7 +5,7 @@ package generator
 import (
 	"bufio"
 	"fmt"
-	"github.com/johnathanclong/Goofy-Goblin/pkg/utils"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/master/utils"
 	"io/ioutil"
 	"os"
 	"os/exec"

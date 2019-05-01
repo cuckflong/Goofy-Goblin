@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/config"
 
-	"github.com/johnathanclong/Goofy-Goblin/pkg/agent"
-	"github.com/johnathanclong/Goofy-Goblin/pkg/core"
-	"github.com/johnathanclong/Goofy-Goblin/pkg/utils"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/agent"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/core"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/utils"
 )
 
 var mux sync.Mutex

@@ -4,7 +4,7 @@ package utils
 
 import (
 	"github.com/fatih/color"
-	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/config"
 )
 
 // Constants
