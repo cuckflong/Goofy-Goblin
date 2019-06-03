@@ -3,7 +3,7 @@
 package core
 
 import (
-	"github.com/johnathanclong/Goofy-Goblin/pkg/agent"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/agent"
 )
 
 // FunctionList is an array of function loaded into the agent

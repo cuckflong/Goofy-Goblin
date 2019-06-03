@@ -5,13 +5,14 @@ package generator
 import (
 	"bufio"
 	"fmt"
-	"github.com/johnathanclong/Goofy-Goblin/pkg/master/utils"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/johnathanclong/Goofy-Goblin/pkg/master/utils"
 )
 
 // GenerateAgent creates an agent with the given modules
@@ -20,12 +21,11 @@ func GenerateAgent(debug bool, verbose bool, silent bool, moduleList []string) e
 	if err != nil {
 		return err
 	}
-	utils.Status(utils.Info, tempDir)
-	//defer os.RemoveAll(tempDir)
+	defer os.RemoveAll(tempDir)
 
-	ldflags := "-X github.com/johnathanclong/Goofy-Goblin/pkg/config.debugString=" + strconv.FormatBool(debug)
-	ldflags += " -X github.com/johnathanclong/Goofy-Goblin/pkg/config.verboseString=" + strconv.FormatBool(verbose)
-	ldflags += " -X github.com/johnathanclong/Goofy-Goblin/pkg/config.silentString=" + strconv.FormatBool(silent)
+	ldflags := "-X github.com/johnathanclong/Goofy-Goblin/pkg/agent/config.debugString=" + strconv.FormatBool(debug)
+	ldflags += " -X github.com/johnathanclong/Goofy-Goblin/pkg/agent/config.verboseString=" + strconv.FormatBool(verbose)
+	ldflags += " -X github.com/johnathanclong/Goofy-Goblin/pkg/agent/config.silentString=" + strconv.FormatBool(silent)
 
 	var tags string
 
@@ -43,11 +43,9 @@ func GenerateAgent(debug bool, verbose bool, silent bool, moduleList []string) e
 
 	copyCompileFile("cmd/goblin-agent/main.go", tempDir)
 
-	utils.Status(utils.Info, ldflags)
-	cmd := exec.Command("go", "build", "-o", "test", "-ldflags", ldflags, "-tags", tags)
+	cmd := exec.Command("go", "build", "-o", "../data/bin/test", "-ldflags", ldflags, "-tags", tags)
 	cmd.Dir = tempDir
 	cmd.Run()
-
 	return err
 }
 
@@ -64,7 +62,6 @@ func getTag(fileName string) string {
 	for scanner.Scan() {
 		if rp.MatchString(scanner.Text()) {
 			tag := strings.Split(rp.FindString(scanner.Text()), " ")[2]
-			utils.Status(utils.Info, tag)
 			return tag
 		}
 	}
@@ -73,6 +70,9 @@ func getTag(fileName string) string {
 
 func copyCompileFile(src string, dir string) error {
 	fileName, err := ioutil.TempFile(dir, "compile.*.go")
+	if err != nil {
+		utils.Status(utils.Error, fmt.Sprintf("Failed copying %s", src))
+	}
 
 	input, err := ioutil.ReadFile(src)
 

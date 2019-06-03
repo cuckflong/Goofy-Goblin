@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/johnathanclong/Goofy-Goblin/pkg/config"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/config"
 
-	"github.com/johnathanclong/Goofy-Goblin/pkg/utils"
+	"github.com/johnathanclong/Goofy-Goblin/pkg/agent/utils"
 	uuid "github.com/satori/go.uuid"
 )
 
